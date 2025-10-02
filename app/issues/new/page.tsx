@@ -10,7 +10,7 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createIssueSchema } from "@/app/validationSchemas";
 import { z } from "zod";
-import { Title } from "@radix-ui/themes/components/alert-dialog";
+import ErrorMessage from "@/app/components/ErrorMessage";
 type IssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
@@ -45,10 +45,7 @@ const NewIssuePage = () => {
         <TextField.Root placeholder="Title" {...register("title")}>
           <TextField.Slot></TextField.Slot>
         </TextField.Root>
-        {errors.title && (
-          <span className="text-red-500 text-sm">{errors.title.message}</span>
-        )}
-
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
         <Controller
           name="description"
           defaultValue=""
@@ -57,11 +54,8 @@ const NewIssuePage = () => {
             <SimpleMDE placeholder="Reply to comment… " {...field} />
           )}
         />
-        {errors.description && (
-          <span className="text-red-500 text-sm">
-            {errors.description.message}
-          </span>
-        )}
+
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
         <Button> Submit new issue</Button>
       </form>
