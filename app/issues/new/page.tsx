@@ -1,5 +1,5 @@
 "use client";
-import { Button, Callout, TextField } from "@radix-ui/themes";
+import { Button, Callout, Spinner, TextField } from "@radix-ui/themes";
 import { useForm, Controller } from "react-hook-form";
 import SimpleMDE from "react-simplemde-editor";
 import axios from "axios";
@@ -15,6 +15,7 @@ type IssueForm = z.infer<typeof createIssueSchema>;
 
 const NewIssuePage = () => {
   const user = useRouter();
+  const [isSubmitting, setSubmitting] = useState(false);
   const {
     register,
     control,
@@ -35,9 +36,11 @@ const NewIssuePage = () => {
         className="max-w-xl space-y-3"
         onSubmit={handleSubmit(async (data) => {
           try {
+            setSubmitting(true);
             await axios.post("/api/issues", data);
             user.push("/issues");
           } catch (error) {
+            setSubmitting(false);
             setError("An unexpected error occurred");
           }
         })}
@@ -57,7 +60,11 @@ const NewIssuePage = () => {
 
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
-        <Button> Submit new issue</Button>
+        <Button disabled={isSubmitting}>
+          {" "}
+          Submit new issue
+          {isSubmitting && <Spinner />}
+        </Button>
       </form>
     </div>
   );
