@@ -34,10 +34,10 @@ const IssuesPage = async () => {
                   <IssueStatusBade status={issue.status} />
                 </div>
               </Table.Cell>
-              <Table.Cell className="block md:table-cell">
+              <Table.Cell className="hidden md:table-cell">
                 <IssueStatusBade status={issue.status} />
               </Table.Cell>
-              <Table.Cell className="block md:table-cell">
+              <Table.Cell className="hidden md:table-cell">
                 {issue.createdAt.toDateString()}
               </Table.Cell>
             </Table.Row>
