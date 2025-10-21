@@ -1,4 +1,5 @@
 "use client";
+
 import { Skeleton } from "@/app/components";
 import Link from "next/link";
 import React from "react";
@@ -14,13 +15,16 @@ import {
   Flex,
   Text,
 } from "@radix-ui/themes";
+
 const NavBar = () => {
   return (
-    <nav className=" border-b mb-5 px-5 py-3 ">
+    <nav className="border-b mb-5 px-5 py-3">
       <Container>
         <Flex justify="between">
           <Flex align="center" gap="3">
-            <Link href={"/"}>{<AiFillBug />}</Link>
+            <Link href={"/"}>
+              <AiFillBug />
+            </Link>
             <NavLink />
           </Flex>
           <AuthStatus />
@@ -29,21 +33,22 @@ const NavBar = () => {
     </nav>
   );
 };
+
 const NavLink = () => {
   const currentPath = usePathname();
 
-  const link = [
-    { label: "Dashborad", href: "/" },
+  const links = [
+    { label: "Dashboard", href: "/" },
     { label: "Issues", href: "/issues/list" },
   ];
+
   return (
     <ul className="flex space-x-6">
-      {link.map((link) => (
+      {links.map((link) => (
         <li key={link.href}>
           <Link
-            className={classNames({
-              "nav-link": true,
-              " !text-zinc-900": link.href === currentPath,
+            className={classNames("nav-link", {
+              "!text-zinc-900": link.href === currentPath,
             })}
             href={link.href}
           >
@@ -54,20 +59,26 @@ const NavLink = () => {
     </ul>
   );
 };
+
 const AuthStatus = () => {
   const { data: session, status } = useSession();
+
   if (status === "loading") return <Skeleton width="3rem" />;
+
   if (status === "unauthenticated")
-    <Link className="nav-link" href="/api/auth/signin">
-      Sign in
-    </Link>;
+    return (
+      <Link className="nav-link" href="/api/auth/signin">
+        Sign in
+      </Link>
+    );
+
   return (
     <Box>
       <DropdownMenu.Root>
         <DropdownMenu.Trigger>
           <Avatar
-            src={session!.user!.image!}
-            fallback="?"
+            src={session?.user?.image || undefined}
+            fallback={session?.user?.name?.[0]?.toUpperCase() || "?"}
             size="2"
             radius="full"
             className="cursor-pointer"
@@ -76,9 +87,9 @@ const AuthStatus = () => {
         </DropdownMenu.Trigger>
         <DropdownMenu.Content>
           <DropdownMenu.Label>
-            <Text size="2">{session!.user!.email}</Text>
+            <Text size="2">{session?.user?.email || "No email"}</Text>
           </DropdownMenu.Label>
-          <DropdownMenu.Item>
+          <DropdownMenu.Item asChild>
             <Link href="/api/auth/signout">Log out</Link>
           </DropdownMenu.Item>
         </DropdownMenu.Content>
@@ -86,4 +97,5 @@ const AuthStatus = () => {
     </Box>
   );
 };
+
 export default NavBar;
