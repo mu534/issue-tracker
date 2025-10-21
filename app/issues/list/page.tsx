@@ -6,9 +6,22 @@ import IssueActions from "./IssueActions";
 import prisma from "@/lib/prisma";
 
 import delay from "delay";
+import { Status } from "@/app/generated/prisma";
 
-const IssuesPage = async () => {
-  const issues = await prisma.issue.findMany();
+const IssuesPage = async ({
+  searchParams,
+}: {
+  searchParams: { status: Status };
+}) => {
+  const statuses = Object.values(Status);
+  const status = statuses.includes(searchParams.status)
+    ? searchParams.status
+    : undefined;
+  const issues = await prisma.issue.findMany({
+    where: {
+      status,
+    },
+  });
   await delay(2000);
   return (
     <div>
