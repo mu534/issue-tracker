@@ -1,3 +1,4 @@
+// ...existing code...
 import React from "react";
 import { Table } from "@radix-ui/themes";
 import { IssueStatusBade, Link } from "@/app/components";
@@ -14,7 +15,8 @@ import Pagination from "@/app/components/Pagination";
 const IssuesPage = async ({
   searchParams,
 }: {
-  searchParams: { status: Status; orderBy: keyof Issue; page: string };
+  // relaxed to allow optional/strings coming from URL
+  searchParams: { status?: string; orderBy?: string; page?: string };
 }) => {
   const column: {
     label: string;
@@ -25,17 +27,25 @@ const IssuesPage = async ({
     { label: "Status", value: "status", className: "hidden md:table-cell" },
     { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
   ];
-  const statuses = Object.values(Status);
-  const status = statuses.includes(searchParams.status)
-    ? searchParams.status
-    : undefined;
-  const where = { status };
-  const orderBy = column
-    .map((column) => column.value)
-    .includes(searchParams.orderBy)
-    ? { [searchParams.orderBy]: "asc" }
-    : undefined;
-  const page = parseInt(searchParams.page) || 1;
+
+  const statuses = Object.values(Status) as string[];
+  const status =
+    searchParams?.status && statuses.includes(searchParams.status)
+      ? (searchParams.status as Status)
+      : undefined;
+
+  const where = status ? { status } : undefined;
+
+  const orderBy =
+    searchParams?.orderBy &&
+    column.map((c) => c.value).includes(searchParams.orderBy as keyof Issue)
+      ? ({ [searchParams.orderBy as keyof Issue]: "asc" } as Record<
+          keyof Issue,
+          "asc"
+        >)
+      : undefined;
+
+  const page = parseInt(searchParams?.page ?? "1", 10) || 1;
   const pageSize = 10;
 
   const issues = await prisma.issue.findMany({
@@ -92,10 +102,11 @@ const IssuesPage = async ({
           ))}
         </Table.Body>
       </Table.Root>
+
       <Pagination
-        itemCount={pageSize}
-        pageSize={page}
-        currentPage={issueCount}
+        itemCount={issueCount}
+        pageSize={pageSize}
+        currentPage={page}
       />
     </div>
   );
