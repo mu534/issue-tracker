@@ -1,15 +1,9 @@
-// ...existing code...
 import React from "react";
-import { Flex, Table } from "@radix-ui/themes";
-import { IssueStatusBade, Link } from "@/app/components";
-
+import { Flex } from "@radix-ui/themes";
 import IssueActions from "./IssueActions";
-
 import prisma from "@/lib/prisma";
-
 import delay from "delay";
 import { Status } from "@/app/generated/prisma";
-
 import Pagination from "@/app/components/Pagination";
 import IssueTable, { columnNames, IssueQuery } from "./IssueTable";
 interface Props {
