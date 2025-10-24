@@ -6,7 +6,7 @@ import IssueDetails from "./IssueDetails";
 import DeleteIssueButton from "./DeleteIssueButton";
 import { getServerSession } from "next-auth";
 import authOptions from "@/app/auth/authOptions";
-import AssigneeSelectWrapper from "./AssigneeSelectWrapper"; // use wrapper
+import AssigneeSelectWrapper from "./AssigneeSelectWrapper";
 import { cache } from "react";
 
 interface Props {
