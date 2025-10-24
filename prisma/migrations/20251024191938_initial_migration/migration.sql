@@ -55,10 +55,11 @@ CREATE TABLE `users` (
 
 -- CreateTable
 CREATE TABLE `verification_tokens` (
+    `id` INT NOT NULL AUTO_INCREMENT,
     `identifier` VARCHAR(191) NOT NULL,
     `token` VARCHAR(191) NOT NULL,
     `expires` DATETIME(3) NOT NULL,
 
     UNIQUE INDEX `verification_tokens_identifier_token_key`(`identifier`, `token`),
-    PRIMARY KEY (`identifier`, `token`)
+    PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
